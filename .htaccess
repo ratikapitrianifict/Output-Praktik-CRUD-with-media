@@ -1,0 +1,9 @@
+# =========================================================
+# .htaccess - Web Programming 1 (Modul 08)
+# =========================================================
+
+# Matikan Directory Browsing / Listing
+Options -Indexes
+
+# Tentukan file default yang pertama kali dibuka
+DirectoryIndex index.php index.html
