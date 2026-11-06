@@ -4,8 +4,8 @@
  * Modul 3B, 4B, 5B & Modul 08 - Web Programming 1
  */
 
-require_once "../config/auth.php";
-require_once "../config/koneksi.php";
+require_once __DIR__ . "/../config/auth.php";
+require_once __DIR__ . "/../config/koneksi.php";
 
 $sql = "SELECT id, nim, nama, program_studi, email FROM mahasiswa ORDER BY id ASC";
 $result = $conn->query($sql);
@@ -22,7 +22,7 @@ $result = $conn->query($sql);
 
     <header>
         <h1>Data Mahasiswa</h1>
-        <p>Web Programming 1 - Integrasi Database MySQL &amp; Dynamic Table</p>
+        <p>Web Programming 1 - Integrasi Database MySQL dan Tabel Dinamis</p>
     </header>
 
     <nav>
@@ -32,57 +32,60 @@ $result = $conn->query($sql);
         <a href="data_mahasiswa.php" class="active">Data Mahasiswa</a>
         <a href="form_mahasiswa.php">Tambah Mahasiswa</a>
         <a href="../crud/index.php">CRUD Mahasiswa</a>
+        <a href="../crud-media/index.php">CRUD Media</a>
         <a href="../proses/logout.php" class="nav-logout">Logout (<?= htmlspecialchars($_SESSION["username"]); ?>)</a>
     </nav>
 
     <main>
         <section class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                <h2 style="margin: 0;">Daftar Mahasiswa Terdaftar (Tampilan Modul Lama)</h2>
-                <div style="display: flex; gap: 8px;">
-                    <a href="form_mahasiswa.php" class="btn-action" style="background-color: #1f4e79; color: white;">+ Tambah Mahasiswa Baru</a>
-                    <a href="../crud/index.php" class="btn-action" style="background-color: #10b981; color: white;">Buka Fitur CRUD &raquo;</a>
+            <div class="section-header">
+                <h2>Daftar Mahasiswa Terdaftar</h2>
+                <div class="link-group" style="margin-top: 0;">
+                    <a href="form_mahasiswa.php" class="btn-action btn-primary">Tambah Mahasiswa Baru</a>
+                    <a href="../crud/index.php" class="btn-action btn-secondary">Buka Modul CRUD</a>
                 </div>
             </div>
 
             <?php if (isset($_GET["status"]) && $_GET["status"] === "sukses"): ?>
-                <div class="message sukses" style="margin-top: 16px;">
-                    &check; Data mahasiswa berhasil disimpan ke database.
+                <div class="message sukses">
+                    Data mahasiswa berhasil disimpan ke dalam database.
                 </div>
             <?php endif; ?>
 
-            <table class="data-table">
-                <caption>Data Mahasiswa dari MySQL (Database: web_programming_1)</caption>
-                <thead>
-                    <tr>
-                        <th scope="col" style="width: 50px; text-align: center;">No</th>
-                        <th scope="col">NIM</th>
-                        <th scope="col">Nama</th>
-                        <th scope="col">Program Studi</th>
-                        <th scope="col">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($result && $result->num_rows > 0): ?>
-                        <?php $no = 1; ?>
-                        <?php while ($row = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td style="text-align: center;"><?= $no++; ?></td>
-                                <td><?= htmlspecialchars($row["nim"]); ?></td>
-                                <td><?= htmlspecialchars($row["nama"]); ?></td>
-                                <td><?= htmlspecialchars($row["program_studi"]); ?></td>
-                                <td><?= htmlspecialchars($row["email"]); ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <caption>Data Mahasiswa pada Database web_programming_1</caption>
+                    <thead>
                         <tr>
-                            <td colspan="5" style="text-align: center; color: #64748b; padding: 24px;">
-                                Belum ada data mahasiswa di tabel <code>mahasiswa</code>. Silakan <a href="form_mahasiswa.php">tambah data baru</a>.
-                            </td>
+                            <th scope="col" class="col-no">No</th>
+                            <th scope="col">NIM</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Program Studi</th>
+                            <th scope="col">Email</th>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php if ($result && $result->num_rows > 0): ?>
+                            <?php $no = 1; ?>
+                            <?php while ($row = $result->fetch_assoc()): ?>
+                                <tr>
+                                    <td class="col-no"><?= $no++; ?></td>
+                                    <td><?= htmlspecialchars($row["nim"]); ?></td>
+                                    <td><?= htmlspecialchars($row["nama"]); ?></td>
+                                    <td><?= htmlspecialchars($row["program_studi"]); ?></td>
+                                    <td><?= htmlspecialchars($row["email"]); ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="empty-table-cell">
+                                    Belum ada data mahasiswa pada tabel <code>mahasiswa</code>. Silakan <a href="form_mahasiswa.php" class="text-link">menambahkan data baru</a>.
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </main>
 

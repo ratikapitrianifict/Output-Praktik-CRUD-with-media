@@ -1,6 +1,11 @@
 <?php
-require_once "../config/auth.php";
-require_once "../config/koneksi.php";
+/**
+ * Backend Pemroses Tambah CRUD Mahasiswa (proses/proses_crud_tambah.php)
+ * Modul 08 - Web Programming 1
+ */
+
+require_once __DIR__ . "/../config/auth.php";
+require_once __DIR__ . "/../config/koneksi.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../crud/tambah.php");
@@ -22,10 +27,22 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 $stmt = $conn->prepare(
     "INSERT INTO mahasiswa (nim, nama, program_studi, email)
-    VALUES (?, ?, ?, ?)"
+     VALUES (?, ?, ?, ?)"
 );
+
+if (!$stmt) {
+    die("Gagal menyiapkan query: " . htmlspecialchars($conn->error));
+}
+
 $stmt->bind_param("ssss", $nim, $nama, $program_studi, $email);
-$stmt->execute();
+
+if (!$stmt->execute()) {
+    $err = $stmt->error;
+    $stmt->close();
+    $conn->close();
+    die("Gagal menyimpan data: " . htmlspecialchars($err));
+}
+
 $stmt->close();
 $conn->close();
 

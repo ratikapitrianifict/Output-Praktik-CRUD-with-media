@@ -76,14 +76,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 3. Search / Filter Tabel Mahasiswa (Step 14)
     const searchInput = document.getElementById("searchMahasiswa");
-    const tableRows = document.querySelectorAll("#crudTable tbody tr");
-    if (searchInput) {
+    const tableBody = document.querySelector("#crudTable tbody");
+    const tableRows = document.querySelectorAll("#crudTable tbody tr:not([data-empty-row])");
+
+    if (searchInput && tableBody && tableRows.length > 0) {
         searchInput.addEventListener("input", function () {
             const keyword = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+
             tableRows.forEach(function (row) {
                 const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(keyword) ? "" : "none";
+                const isMatch = text.includes(keyword);
+                row.style.display = isMatch ? "" : "none";
+                if (isMatch) visibleCount++;
             });
+
+            let noMatchRow = document.getElementById("noMatchCrudRow");
+            if (visibleCount === 0) {
+                if (!noMatchRow) {
+                    noMatchRow = document.createElement("tr");
+                    noMatchRow.id = "noMatchCrudRow";
+                    noMatchRow.innerHTML =
+                        '<td colspan="6" style="text-align: center; color: #64748b; padding: 20px;">Data mahasiswa yang dicari tidak ditemukan.</td>';
+                    tableBody.appendChild(noMatchRow);
+                }
+                noMatchRow.style.display = "";
+            } else if (noMatchRow) {
+                noMatchRow.style.display = "none";
+            }
         });
     }
 
@@ -92,11 +112,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const status = params.get("status");
     if (status === "tambah") {
         alert("Data berhasil ditambahkan.");
-    }
-    if (status === "update") {
+    } else if (status === "update") {
         alert("Data berhasil diperbarui.");
-    }
-    if (status === "hapus") {
+    } else if (status === "hapus") {
         alert("Data berhasil dihapus.");
+    }
+
+    // Bersihkan query string status dari URL agar tidak muncul alert berulang saat refresh
+    if (status && window.history && window.history.replaceState) {
+        params.delete("status");
+        const newQuery = params.toString();
+        const newUrl = window.location.pathname + (newQuery ? "?" + newQuery : "");
+        window.history.replaceState({}, document.title, newUrl);
     }
 });

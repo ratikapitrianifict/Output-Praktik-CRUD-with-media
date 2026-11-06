@@ -1,18 +1,17 @@
 <?php
 /**
  * Halaman Dashboard Utama (pages/dashboard.php)
- * Modul 5B & Modul 08 - Web Programming 1
+ * Modul 5B, Modul 08 & Modul 10 - Web Programming 1
  */
 
-require_once "../config/auth.php";
-require_once "../config/koneksi.php";
+require_once __DIR__ . "/../config/auth.php";
+require_once __DIR__ . "/../config/koneksi.php";
 
-// Ambil statistik jumlah mahasiswa untuk ringkasan di dashboard
 $total_mhs = 0;
-$query_count = $conn->query("SELECT COUNT(*) as total FROM mahasiswa");
+$query_count = $conn->query("SELECT COUNT(*) AS total FROM mahasiswa");
 if ($query_count) {
     $row_count = $query_count->fetch_assoc();
-    $total_mhs = $row_count['total'] ?? 0;
+    $total_mhs = (int) ($row_count["total"] ?? 0);
 }
 ?>
 <!DOCTYPE html>
@@ -27,7 +26,7 @@ if ($query_count) {
 
     <header>
         <h1>Dashboard Application Lab</h1>
-        <p>Tugas Praktik Web Programming 1 - Authentication, Session &amp; CRUD</p>
+        <p>Tugas Praktik Web Programming 1 - Authentication, Session, dan CRUD</p>
     </header>
 
     <nav>
@@ -37,60 +36,57 @@ if ($query_count) {
         <a href="data_mahasiswa.php">Data Mahasiswa</a>
         <a href="form_mahasiswa.php">Tambah Mahasiswa</a>
         <a href="../crud/index.php">CRUD Mahasiswa</a>
+        <a href="../crud-media/index.php">CRUD Media</a>
         <a href="../proses/logout.php" class="nav-logout">Logout (<?= htmlspecialchars($_SESSION["username"]); ?>)</a>
     </nav>
 
     <main>
         <section class="card">
             <h2>Selamat Datang</h2>
-            <p style="font-size: 1.1rem; line-height: 1.6;">
-                Halo, <strong><?= htmlspecialchars($_SESSION["nama_lengkap"]); ?></strong>!
-            </p>
-            <div class="message sukses" style="margin-top: 14px;">
-                &check; Anda sudah berhasil melewati proses <strong>Authentication</strong> dan session Anda saat ini aktif.
-            </div>
             <p>
-                Halaman ini dilindungi secara ketat oleh <code>config/auth.php</code>. Pengguna yang belum login atau belum memiliki session yang valid tidak akan dapat mengakses halaman ini maupun data mahasiswa.
+                Selamat datang, <strong><?= htmlspecialchars($_SESSION["nama_lengkap"]); ?></strong>.
+            </p>
+            <div class="message sukses">
+                Status Autentikasi: Anda telah berhasil masuk dan sesi pengguna saat ini aktif.
+            </div>
+            <p class="text-muted">
+                Halaman ini dilindungi oleh sistem autentikasi pada <code>config/auth.php</code>. Pengguna yang belum memiliki sesi aktif tidak dapat mengakses halaman internal maupun pengelolaan data mahasiswa.
             </p>
         </section>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 20px;">
-            <div class="card" style="margin-bottom: 0;">
-                <h3 style="margin-top: 0; color: #1f4e79;">Data Mahasiswa</h3>
-                <p style="font-size: 2rem; font-weight: bold; margin: 8px 0; color: #1f4e79;">
-                    <?= $total_mhs; ?> <span style="font-size: 1rem; font-weight: normal; color: #64748b;">Record</span>
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Ringkasan Data Mahasiswa</h3>
+                <p class="stat-number">
+                    <?= $total_mhs; ?> <span class="stat-unit">Data Terdaftar</span>
                 </p>
-                <p style="color: #64748b; font-size: 0.9rem;">
-                    Data terhubung dengan MySQL database <code>web_programming_1</code>.
+                <p class="text-muted">
+                    Terhubung dengan database MySQL <code>web_programming_1</code>.
                 </p>
-                <div style="display: flex; gap: 12px; margin-top: 8px;">
-                    <a href="data_mahasiswa.php" style="color: #1f4e79; font-weight: 600; text-decoration: none;">
-                        Data Lama &raquo;
-                    </a>
-                    <a href="../crud/index.php" style="color: #1f4e79; font-weight: 600; text-decoration: none;">
-                        Area CRUD Baru &raquo;
-                    </a>
+                <div class="link-group">
+                    <a href="data_mahasiswa.php" class="text-link">Data Mahasiswa</a>
+                    <a href="../crud/index.php" class="text-link">CRUD Mahasiswa</a>
+                    <a href="../crud-media/index.php" class="text-link">CRUD Media</a>
                 </div>
             </div>
 
-            <div class="card" style="margin-bottom: 0;">
-                <h3 style="margin-top: 0; color: #1f4e79;">Informasi Akun</h3>
-                <p style="margin: 6px 0;"><strong>Username:</strong> <?= htmlspecialchars($_SESSION["username"]); ?></p>
-                <p style="margin: 6px 0;"><strong>Nama:</strong> <?= htmlspecialchars($_SESSION["nama_lengkap"]); ?></p>
-                <p style="margin: 6px 0;"><strong>Status:</strong> <span style="color: #16a34a; font-weight: bold;">Logged In</span></p>
-                <a href="../proses/logout.php" style="display: inline-block; margin-top: 8px; color: #dc2626; font-weight: 600; text-decoration: none;">
-                    Keluar / Logout &raquo;
-                </a>
+            <div class="card">
+                <h3>Informasi Sesi Akun</h3>
+                <p><strong>Username:</strong> <?= htmlspecialchars($_SESSION["username"]); ?></p>
+                <p><strong>Nama Lengkap:</strong> <?= htmlspecialchars($_SESSION["nama_lengkap"]); ?></p>
+                <p><strong>Status Sesi:</strong> <span class="status-active">Aktif</span></p>
+                <a href="../proses/logout.php" class="text-link-danger">Akhiri Sesi (Logout)</a>
             </div>
         </div>
 
         <section class="card">
-            <h3>Navigasi Cepat Aplikasi</h3>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
-                <a href="../crud/index.php" class="btn-action" style="background-color: #1f4e79; color: white;">&bull; Kelola CRUD Mahasiswa (Modul 08)</a>
-                <a href="data_mahasiswa.php" class="btn-action">&bull; Data Mahasiswa Lama (Modul 3B/4B)</a>
-                <a href="form_mahasiswa.php" class="btn-action">&bull; Form Tambah Lama (Modul 4B)</a>
-                <a href="../proses/logout.php" class="btn-action btn-danger">&bull; Akhiri Sesi (Logout)</a>
+            <h3>Navigasi Modul Aplikasi</h3>
+            <div class="link-group">
+                <a href="../crud-media/index.php" class="btn-action btn-primary">Kelola CRUD Media (Modul 10)</a>
+                <a href="../crud/index.php" class="btn-action">Kelola CRUD Mahasiswa (Modul 08)</a>
+                <a href="data_mahasiswa.php" class="btn-action">Data Mahasiswa (Modul 3B/4B)</a>
+                <a href="form_mahasiswa.php" class="btn-action">Form Tambah Mahasiswa (Modul 4B)</a>
+                <a href="../proses/logout.php" class="btn-action btn-danger">Logout</a>
             </div>
         </section>
     </main>

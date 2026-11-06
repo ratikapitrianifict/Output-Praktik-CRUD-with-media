@@ -8,3 +8,11 @@ Thumbs.db
 *.local
 scratch/
 temp_*.php
+
+# Uploaded Media Files (tetap simpan struktur folder via .gitkeep)
+uploads/images/*
+!uploads/images/.gitkeep
+uploads/audio/*
+!uploads/audio/.gitkeep
+uploads/documents/*
+!uploads/documents/.gitkeep

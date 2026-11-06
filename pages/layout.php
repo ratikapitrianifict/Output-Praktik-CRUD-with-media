@@ -21,7 +21,7 @@ $is_logged_in = isset($_SESSION["user_id"]);
 
     <header>
         <h1>Layout Lab</h1>
-        <p>Eksperimen CSS Box Model &amp; Struktur Spacing (Modul 4A)</p>
+        <p>Demonstrasi CSS Box Model dan Struktur Tata Letak (Modul 4A)</p>
     </header>
 
     <nav>
@@ -30,35 +30,36 @@ $is_logged_in = isset($_SESSION["user_id"]);
         <a href="layout.php" class="active">Layout Lab</a>
         <a href="data_mahasiswa.php">Data Mahasiswa</a>
         <a href="form_mahasiswa.php">Tambah Mahasiswa</a>
-        <a href="../crud/index.php">Mahasiswa</a>
+        <a href="../crud/index.php">CRUD Mahasiswa</a>
+        <a href="../crud-media/index.php">CRUD Media</a>
         <?php if ($is_logged_in): ?>
             <a href="../proses/logout.php" class="nav-logout">Logout (<?= htmlspecialchars($_SESSION["username"]); ?>)</a>
         <?php else: ?>
-            <a href="login.php" style="background-color: #1f4e79; color: white;">Login System &raquo;</a>
+            <a href="login.php" class="nav-login">Login</a>
         <?php endif; ?>
     </nav>
 
     <main>
         <section class="card">
-            <h2>Eksperimen Box Model</h2>
+            <h2>Konsep CSS Box Model</h2>
             <p>
-                Setiap elemen adalah box yang memiliki 4 lapisan: <strong>Content</strong>, <strong>Padding</strong>, <strong>Border</strong>, dan <strong>Margin</strong>.
+                Setiap elemen HTML direpresentasikan sebagai kotak persegi panjang yang tersusun atas empat lapisan utama: <strong>Content</strong>, <strong>Padding</strong>, <strong>Border</strong>, dan <strong>Margin</strong>.
             </p>
-            <div style="background: #eef3f8; border: 2px dashed #93c5fd; padding: 20px; border-radius: 8px; margin-top: 14px;">
-                <p style="margin: 0; font-weight: bold; color: #1e3a8a;">Box Demonstrasi</p>
-                <p style="margin: 6px 0 0 0; color: #3b82f6;">Universal box-sizing: border-box membuat perhitungan ukuran elemen konsisten dan mudah diprediksi.</p>
+            <div class="demo-box">
+                <p class="demo-box-title">Area Demonstrasi Box Model</p>
+                <p class="demo-box-desc">Penerapan properti universal <code>box-sizing: border-box</code> memastikan lebar dan tinggi elemen mencakup padding serta border secara konsisten.</p>
             </div>
         </section>
 
         <section class="card">
-            <h2>Demonstrasi Display: Inline-Block</h2>
-            <p>Elemen navigasi di bawah ini menggunakan <code>display: inline-block</code> dengan padding dan border:</p>
-            <div style="margin-top: 10px;">
-                <a href="#" class="btn-action">HTML5</a>
-                <a href="#" class="btn-action">CSS3 Box Model</a>
-                <a href="#" class="btn-action">PHP Server</a>
-                <a href="#" class="btn-action">MySQL Database</a>
-                <a href="#" class="btn-action">JavaScript CRUD</a>
+            <h2>Penerapan Properti Display: Inline-Block</h2>
+            <p>Komponen tautan di bawah ini menggunakan properti <code>display: inline-block</code> sehingga dapat diatur dimensi ruang dalamnya tanpa kehilangan alur horizontal:</p>
+            <div class="link-group">
+                <a href="index.php" class="btn-action">HTML5 Semantik</a>
+                <a href="layout.php" class="btn-action">CSS3 Box Model</a>
+                <a href="data_mahasiswa.php" class="btn-action">Integrasi MySQL</a>
+                <a href="../crud/index.php" class="btn-action">Modul CRUD Teks</a>
+                <a href="../crud-media/index.php" class="btn-action">Modul CRUD Media</a>
             </div>
         </section>
     </main>

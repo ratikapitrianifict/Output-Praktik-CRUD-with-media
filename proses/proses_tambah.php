@@ -1,11 +1,11 @@
 <?php
 /**
- * Backend Pemroses Tambah Mahasiswa (proses/proses_tambah.php)
+ * Backend Pemroses Tambah Mahasiswa Lama (proses/proses_tambah.php)
  * Modul 4B, 5B, & 08 - Web Programming 1 (Proses Lama, Tetap)
  */
 
-require_once "../config/auth.php";
-require_once "../config/koneksi.php";
+require_once __DIR__ . "/../config/auth.php";
+require_once __DIR__ . "/../config/koneksi.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../pages/form_mahasiswa.php");
@@ -21,12 +21,16 @@ if ($nim === "" || $nama === "" || $program_studi === "" || $email === "") {
     die("Semua field wajib diisi. Silakan kembali ke form.");
 }
 
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    die("Format email tidak valid. Silakan kembali ke form.");
+}
+
 $stmt = $conn->prepare(
     "INSERT INTO mahasiswa (nim, nama, program_studi, email) VALUES (?, ?, ?, ?)"
 );
 
 if (!$stmt) {
-    die("Gagal menyiapkan query: " . $conn->error);
+    die("Gagal menyiapkan query: " . htmlspecialchars($conn->error));
 }
 
 $stmt->bind_param(
@@ -43,8 +47,9 @@ if ($stmt->execute()) {
     header("Location: ../pages/data_mahasiswa.php?status=sukses");
     exit;
 } else {
-    echo "Gagal menyimpan data: " . $stmt->error;
+    $err = $stmt->error;
     $stmt->close();
     $conn->close();
+    die("Gagal menyimpan data: " . htmlspecialchars($err));
 }
 ?>

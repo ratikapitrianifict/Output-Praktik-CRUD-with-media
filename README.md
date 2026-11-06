@@ -1,99 +1,120 @@
-# Web Programming 1 - Modul 08
-## Form Handling, Validation & CRUD: Integrating PHP, MySQL and JavaScript
+# Web Programming 1 - Modul 10
+## Multimedia CRUD & File Handling: PHP Upload, Validation, JavaScript DOM and Media Preview
 
-Repositori ini telah dirapikan dan distrukturkan sesuai panduan **Modul 08: Form Handling, Validation & CRUD: Integrating PHP, MySQL and JavaScript** pada mata kuliah Web Programming 1.
+Repositori ini merupakan implementasi tugas praktik mata kuliah **Web Programming 1** yang mencakup sistem autentikasi berbasis session, pengelolaan data mahasiswa (CRUD Teks - Modul 08), serta pengelolaan data multimedia mahasiswa (CRUD Media - Modul 10).
 
 ---
 
-### 📁 Struktur Folder Project
+### Struktur Direktori Proyek
 
 ```text
 web_programming_1/
 |
 +-- assets/
 |   +-- css/
-|   |   +-- style.css           <-- Styling utama + komponen CRUD
+|   |   +-- style.css                 # Stylesheet utama aplikasi (Box Model, Form, Tabel, CRUD, Media)
 |   +-- images/
-|   |   +-- foto.jpg            <-- Foto profil
-|   |   +-- profile.jpg         <-- Foto profil alternatif
+|   |   +-- foto.jpg                  # Foto profil utama
+|   |   +-- profile.jpg               # Foto profil cadangan
 |   +-- js/
-|       +-- crud.js             <-- BARU: Validasi client-side, search/filter, confirm delete, alert
+|       +-- crud.js                   # Validasi client-side, pencarian tabel, dan konfirmasi hapus (Modul 08)
+|       +-- media.js                  # Preview DOM media, validasi ukuran/tipe file, dan pencarian (Modul 10)
 |
 +-- config/
-|   +-- auth.php                <-- Session guard & proteksi halaman
-|   +-- koneksi.php             <-- Koneksi database MySQLi
+|   +-- auth.php                      # Session guard untuk proteksi halaman internal
+|   +-- koneksi.php                   # Koneksi database MySQLi dan inisialisasi skema tabel otomatis
+|   +-- media_helper.php              # Fungsi helper uploadMedia() dan hapusMediaJikaAda()
 |
 +-- database/
-|   +-- database.sql            <-- Backup skema dan data latihan awal
+|   +-- database.sql                  # Skema database users dan mahasiswa beserta data awal
 |
 +-- pages/
-|   +-- dashboard.php           <-- Dashboard utama setelah login
-|   +-- data_mahasiswa.php      <-- Tabel data mahasiswa modul lama
-|   +-- form_mahasiswa.php      <-- TETAP: Form tambah mahasiswa lama (tidak diubah)
-|   +-- index.php               <-- Biodata publik
-|   +-- layout.php              <-- Eksperimen Box Model (Layout Lab)
-|   +-- login.php               <-- Halaman login
+|   +-- dashboard.php                 # Halaman ringkasan utama setelah login
+|   +-- data_mahasiswa.php            # Halaman tampil data mahasiswa (Modul 3B/4B)
+|   +-- form_mahasiswa.php            # Halaman formulir tambah mahasiswa (Modul 4B)
+|   +-- index.php                     # Halaman biodata publik
+|   +-- layout.php                    # Halaman demonstrasi CSS Box Model (Modul 4A)
+|   +-- login.php                     # Halaman autentikasi pengguna (Modul 5B)
 |
-+-- crud/                       <-- BARU: Fitur CRUD Lanjutan
-|   +-- index.php               <-- READ: Tabel mahasiswa CRUD, toolbar search & tombol action
-|   +-- tambah.php              <-- CREATE: Form input dengan validasi bertingkat
-|   +-- edit.php                <-- UPDATE: Form edit record berdasarkan GET id
++-- crud/                             # Modul 08: CRUD Data Mahasiswa (Berbasis Teks)
+|   +-- index.php                     # Daftar data mahasiswa dengan fitur pencarian dan aksi CRUD
+|   +-- tambah.php                    # Formulir tambah data mahasiswa
+|   +-- edit.php                      # Formulir pembaruan data mahasiswa
+|
++-- crud-media/                       # Modul 10: CRUD Data Mahasiswa dengan File Multimedia
+|   +-- index.php                     # Daftar mahasiswa dengan pratinjau foto, pemutar audio, dan tautan PDF
+|   +-- tambah.php                    # Formulir input data dan unggah file dengan pratinjau DOM
+|   +-- edit.php                      # Formulir pembaruan data dan penggantian file media opsional
 |
 +-- proses/
-|   +-- buat_user.php           <-- Inisialisasi user admin awal
-|   +-- logout.php              <-- Pemroses logout & penghancur session
-|   +-- proses_login.php        <-- Pemroses autentikasi login
-|   +-- proses_tambah.php       <-- Pemroses tambah form lama (tetap)
-|   +-- proses_crud_tambah.php  <-- BARU: Server-side validation & prepared INSERT
-|   +-- proses_update.php       <-- BARU: Server-side validation & prepared UPDATE (WHERE id = ?)
-|   +-- proses_hapus.php        <-- BARU: Server-side validation & prepared DELETE (WHERE id = ?)
+|   +-- crud-media/                   # Pemroses Backend CRUD Media (Modul 10)
+|   |   +-- tambah.php                # Validasi server, unggah file, simpan database, dan rollback file
+|   |   +-- update.php                # Unggah file baru opsional, perbarui database, dan hapus file lama
+|   |   +-- hapus.php                 # Hapus record database dan bersihkan seluruh file fisik terkait
+|   +-- buat_user.php                 # Utilitas inisialisasi tabel dan akun administrator awal
+|   +-- logout.php                    # Pemroses pengakhiran sesi pengguna
+|   +-- proses_login.php              # Pemroses autentikasi login pengguna
+|   +-- proses_tambah.php             # Pemroses tambah data mahasiswa (Modul 4B)
+|   +-- proses_crud_tambah.php        # Pemroses tambah data mahasiswa (Modul 08)
+|   +-- proses_update.php             # Pemroses pembaruan data mahasiswa (Modul 08)
+|   +-- proses_hapus.php              # Pemroses penghapusan data mahasiswa beserta pembersihan media
 |
-+-- .htaccess                   <-- Pengaturan Apache (Options -Indexes)
-+-- index.php                   <-- Root router (redirect ke dashboard / login)
-+-- README.md                   <-- Dokumentasi proyek
++-- uploads/                          # Direktori penyimpanan fisik file media
+|   +-- images/                       # Penyimpanan file foto (JPG, PNG, WEBP)
+|   +-- audio/                        # Penyimpanan file audio (MP3, WAV)
+|   +-- documents/                    # Penyimpanan file dokumen (PDF)
+|
++-- .gitignore
++-- .htaccess
++-- index.php
++-- README.md
 ```
 
 ---
 
-### 🚀 Alur Operasi CRUD (Create, Read, Update, Delete)
+### Spesifikasi Skema Database
 
-| Operasi | SQL | File UI / Form | File Proses Backend | HTTP Method |
-| :--- | :--- | :--- | :--- | :--- |
-| **Create** | `INSERT INTO mahasiswa ...` | `crud/tambah.php` | `proses/proses_crud_tambah.php` | `POST` |
-| **Read** | `SELECT ... FROM mahasiswa ORDER BY id DESC` | `crud/index.php` | *(langsung di halaman)* | `GET` |
-| **Update** | `UPDATE mahasiswa SET ... WHERE id = ?` | `crud/edit.php?id=X` | `proses/proses_update.php` | `GET` lalu `POST` |
-| **Delete** | `DELETE FROM mahasiswa WHERE id = ?` | `crud/index.php` (tombol hapus) | `proses/proses_hapus.php` | `POST` |
+Tabel `mahasiswa` mendukung penyimpanan atribut akademik beserta referensi nama file multimedia:
+
+```sql
+CREATE TABLE IF NOT EXISTS mahasiswa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nim VARCHAR(20) NOT NULL,
+    nama VARCHAR(100) NOT NULL,
+    program_studi VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    foto VARCHAR(255) NULL,
+    audio VARCHAR(255) NULL,
+    dokumen VARCHAR(255) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+Apabila tabel `mahasiswa` sudah dibuat pada sesi sebelumnya, pembaruan struktur tabel dapat dilakukan dengan perintah berikut:
+
+```sql
+ALTER TABLE mahasiswa
+ADD foto VARCHAR(255) NULL,
+ADD audio VARCHAR(255) NULL,
+ADD dokumen VARCHAR(255) NULL;
+```
 
 ---
 
-### 🛡️ Lapisan Validasi & Keamanan (Defense-in-Depth)
+### Spesifikasi Alur CRUD Media (Modul 10)
 
-1. **Client-Side (HTML & JavaScript)**:
-   - Metadata input: `required`, `type="email"`.
-   - `assets/js/crud.js` memeriksa nilai input kosong, format email (`checkValidity()`), menandai field dengan `.is-invalid`, menampilkan pesan `.form-error`, membatalkan submit dengan `event.preventDefault()`, serta memunculkan `alert()`.
-2. **Server-Side (PHP)**:
-   - Tidak pernah percaya data dari client semata.
-   - Pengecekan `$_SERVER["REQUEST_METHOD"] === "POST"`.
-   - Validasi data kosong dengan `trim()`.
-   - Validasi email dengan `filter_var(..., FILTER_VALIDATE_EMAIL)`.
-3. **Database Layer (MySQL & Prepared Statements)**:
-   - Menghindari SQL Injection dengan selalu memisahkan struktur query dan data menggunakan `$stmt = $conn->prepare(...)` dan `bind_param(...)`.
-   - Primary Key `id` stabil untuk operasi `UPDATE` dan `DELETE` berbasis `WHERE id = ?`.
-4. **Session Guard (`config/auth.php`)**:
-   - Memastikan pengguna yang belum login dialihkan ke `pages/login.php?pesan=belum_login`.
+| Operasi | Antarmuka Pengguna | Pemroses Backend | Deskripsi Fungsional |
+| :--- | :--- | :--- | :--- |
+| **Read** | `crud-media/index.php` | Integrasi langsung | Menampilkan daftar mahasiswa beserta pratinjau foto, pemutar audio HTML5, tautan dokumen PDF, dan filter pencarian langsung. |
+| **Create** | `crud-media/tambah.php` | `proses/crud-media/tambah.php` | Pratinjau file di sisi klien menggunakan `URL.createObjectURL()`, validasi tipe MIME menggunakan `finfo`, batas ukuran maksimal 2 MB, penamaan unik dengan `random_bytes()`, serta penghapusan otomatis jika penyimpanan database gagal. |
+| **Update** | `crud-media/edit.php` | `proses/crud-media/update.php` | Penggantian file bersifat opsional. Apabila file baru diunggah, file lama akan dihapus secara otomatis setelah pembaruan database berhasil. |
+| **Delete** | `crud-media/index.php` | `proses/crud-media/hapus.php` | Konfirmasi penghapusan di sisi klien, penghapusan baris data dari tabel MySQL, serta penghapusan seluruh file fisik terkait pada direktori `uploads/`. |
 
 ---
 
-### 📋 Checklist Pengujian Sesuai Modul (Checkpoint 11)
+### Petunjuk Penggunaan
 
-1. **Akses tanpa login**: Buka `crud/index.php` -> Otomatis diarahkan ke `pages/login.php`.
-2. **Login**: Masuk dengan akun `admin` / `123`.
-3. **Buka Menu CRUD Mahasiswa**: Tabel data tampil urut dari yang terbaru.
-4. **Search Real-Time**: Ketik nama/NIM di kolom pencarian -> Row terfilter seketika tanpa reload.
-5. **Validasi Tambah Kosong**: Buka `crud/tambah.php`, klik Simpan tanpa mengisi -> Muncul pesan error & alert popup dari JavaScript.
-6. **Tambah Data Sukses**: Isi form dengan benar -> Data tersimpan via Prepared INSERT, redirect ke `crud/index.php?status=tambah`, dan muncul alert sukses.
-7. **Edit Data**: Klik Edit pada baris record -> Data lama terisi pada form, ubah data dan simpan -> Hanya record tersebut yang berubah.
-8. **Konfirmasi Hapus**: Klik tombol Hapus -> Muncul konfirmasi `confirm("Yakin ingin menghapus data ini?")`.
-   - Jika Cancel: Data tidak terhapus.
-   - Jika OK: Data terhapus via `proses/proses_hapus.php` dengan query DELETE berparameter `id`.
-9. **Halaman Lama Tetap Utuh**: Menu *Data Mahasiswa* dan *Tambah Mahasiswa* versi lama tetap berfungsi normal.
+1. Pastikan layanan **Apache** dan **MySQL** pada Laragon telah aktif.
+2. Impor file `database/database.sql` ke MySQL atau akses halaman `http://localhost/web_programming_1/proses/buat_user.php` untuk menginisialisasi tabel dan akun administrator secara otomatis.
+3. Masuk melalui halaman login menggunakan kredensial bawaan:
+   - **Username:** `admin`
+   - **Password:** `123`

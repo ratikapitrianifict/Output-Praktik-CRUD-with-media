@@ -8,7 +8,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Jika sudah login, langsung alihkan ke dashboard
 if (isset($_SESSION["user_id"])) {
     header("Location: dashboard.php");
     exit;
@@ -25,24 +24,24 @@ if (isset($_SESSION["user_id"])) {
 <body class="auth-page">
 
     <div class="login-card">
-        <h2>Login</h2>
-        <p style="color: #64748b; margin-top: -6px; margin-bottom: 20px;">
-            Masuk untuk membuka Application Lab.
+        <h2>Autentikasi Pengguna</h2>
+        <p class="section-subtitle">
+            Silakan masuk untuk mengakses sistem Application Lab.
         </p>
 
-        <?php if (isset($_GET["error"]) && $_GET["error"] == "1"): ?>
+        <?php if (isset($_GET["error"]) && $_GET["error"] === "1"): ?>
             <div class="message error">
-                Username atau password salah.
+                Username atau password yang Anda masukkan tidak sesuai.
             </div>
         <?php endif; ?>
 
-        <?php if (isset($_GET["pesan"]) && $_GET["pesan"] == "logout"): ?>
+        <?php if (isset($_GET["pesan"]) && $_GET["pesan"] === "logout"): ?>
             <div class="message sukses">
-                Anda sudah logout.
+                Sesi Anda telah berhasil diakhiri.
             </div>
-        <?php elseif (isset($_GET["pesan"]) && $_GET["pesan"] == "belum_login"): ?>
+        <?php elseif (isset($_GET["pesan"]) && $_GET["pesan"] === "belum_login"): ?>
             <div class="message info">
-                Silakan login terlebih dahulu untuk mengakses halaman tersebut.
+                Silakan masuk terlebih dahulu untuk mengakses halaman tersebut.
             </div>
         <?php endif; ?>
 
@@ -57,12 +56,12 @@ if (isset($_SESSION["user_id"])) {
                 <input type="password" id="password" name="password" placeholder="Masukkan password" required>
             </div>
 
-            <button type="submit" id="btn-login">Login</button>
+            <button type="submit" id="btn-login">Masuk</button>
         </form>
 
-        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #64748b; text-align: center;">
-            <p style="margin: 4px 0;">Belum punya akun admin? <a href="../proses/buat_user.php" style="color: #1f4e79; font-weight: 600;">Jalankan Inisialisasi Akun</a></p>
-            <p style="margin: 4px 0;"><a href="index.php" style="color: #64748b; text-decoration: none;">&larr; Kembali ke Biodata Publik</a></p>
+        <div class="login-footer">
+            <p>Belum memiliki akun administrator? <a href="../proses/buat_user.php" class="text-link">Inisialisasi Akun</a></p>
+            <p><a href="index.php" class="text-muted" style="text-decoration: none;">Kembali ke Halaman Biodata Publik</a></p>
         </div>
     </div>
 
