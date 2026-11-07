@@ -42,6 +42,13 @@ $status = $_GET["status"] ?? "";
 
     <main>
         <section class="card">
+            <div class="section-header">
+                <div>
+                    <h2>Daftar Data Mahasiswa dan Media</h2>
+                    <p class="text-muted" style="margin: 4px 0 0 0;">Menampilkan informasi akademik mahasiswa beserta foto profil, rekaman audio, dan dokumen PDF.</p>
+                </div>
+            </div>
+
             <?php if ($status === "tambah"): ?>
                 <div class="message sukses">Data mahasiswa beserta file media berhasil ditambahkan.</div>
             <?php elseif ($status === "update"): ?>
@@ -65,11 +72,11 @@ $status = $_GET["status"] ?? "";
                         <tr>
                             <th class="col-no">No</th>
                             <th class="col-photo">Foto</th>
-                            <th>NIM</th>
-                            <th>Nama</th>
-                            <th>Program Studi</th>
-                            <th>Email</th>
-                            <th>Audio</th>
+                            <th class="col-nim">NIM</th>
+                            <th class="col-nama">Nama Lengkap</th>
+                            <th class="col-prodi">Program Studi</th>
+                            <th class="col-email">Email</th>
+                            <th class="col-audio">Audio</th>
                             <th class="col-center">Dokumen</th>
                             <th class="col-action">Action</th>
                         </tr>
@@ -78,7 +85,7 @@ $status = $_GET["status"] ?? "";
                         <?php if ($result && $result->num_rows > 0): ?>
                             <?php $no = 1; ?>
                             <?php while ($row = $result->fetch_assoc()): ?>
-                                <tr>
+                                <tr data-search="<?= htmlspecialchars(strtolower($row["nim"] . " " . $row["nama"] . " " . $row["program_studi"] . " " . $row["email"])); ?>">
                                     <td class="col-no"><?= $no++; ?></td>
                                     <td class="col-photo">
                                         <?php if (!empty($row["foto"])): ?>
@@ -88,20 +95,20 @@ $status = $_GET["status"] ?? "";
                                                 alt="Foto <?= htmlspecialchars($row["nama"]); ?>"
                                             >
                                         <?php else: ?>
-                                            <span class="media-empty-badge">-</span>
+                                            <span class="media-empty-badge">&mdash;</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= htmlspecialchars($row["nim"]); ?></td>
-                                    <td><?= htmlspecialchars($row["nama"]); ?></td>
-                                    <td><?= htmlspecialchars($row["program_studi"]); ?></td>
-                                    <td><?= htmlspecialchars($row["email"]); ?></td>
-                                    <td>
+                                    <td class="col-nim"><?= htmlspecialchars($row["nim"]); ?></td>
+                                    <td class="col-nama"><?= htmlspecialchars($row["nama"]); ?></td>
+                                    <td class="col-prodi"><?= htmlspecialchars($row["program_studi"]); ?></td>
+                                    <td class="col-email"><?= htmlspecialchars($row["email"]); ?></td>
+                                    <td class="col-audio">
                                         <?php if (!empty($row["audio"])): ?>
                                             <audio controls preload="none" class="table-audio">
                                                 <source src="../uploads/audio/<?= htmlspecialchars($row["audio"]); ?>">
                                             </audio>
                                         <?php else: ?>
-                                            <span class="media-empty-badge">-</span>
+                                            <span class="media-empty-badge">&mdash;</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="col-center">
@@ -115,23 +122,25 @@ $status = $_GET["status"] ?? "";
                                                 Buka PDF
                                             </a>
                                         <?php else: ?>
-                                            <span class="media-empty-badge">-</span>
+                                            <span class="media-empty-badge">&mdash;</span>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="actions">
-                                        <a href="edit.php?id=<?= (int) $row["id"]; ?>">Edit</a>
-                                        <form
-                                            action="../proses/crud-media/hapus.php"
-                                            method="POST"
-                                            class="media-delete-form"
-                                        >
-                                            <input
-                                                type="hidden"
-                                                name="id"
-                                                value="<?= (int) $row["id"]; ?>"
+                                    <td class="actions col-action">
+                                        <div class="action-group">
+                                            <a href="edit.php?id=<?= (int) $row["id"]; ?>" class="btn-edit">Edit</a>
+                                            <form
+                                                action="../proses/crud-media/hapus.php"
+                                                method="POST"
+                                                class="media-delete-form"
                                             >
-                                            <button type="submit" class="btn-delete">Hapus</button>
-                                        </form>
+                                                <input
+                                                    type="hidden"
+                                                    name="id"
+                                                    value="<?= (int) $row["id"]; ?>"
+                                                >
+                                                <button type="submit" class="btn-delete">Hapus</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>

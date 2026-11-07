@@ -41,6 +41,13 @@ $status = $_GET["status"] ?? "";
 
     <main>
         <section class="card">
+            <div class="section-header">
+                <div>
+                    <h2>Daftar Data Mahasiswa</h2>
+                    <p class="text-muted" style="margin: 4px 0 0 0;">Pengelolaan data akademik mahasiswa dengan fitur pencarian langsung, pembaruan, dan penghapusan data.</p>
+                </div>
+            </div>
+
             <?php if ($status === "tambah"): ?>
                 <div class="message sukses">Data mahasiswa berhasil ditambahkan ke dalam database.</div>
             <?php elseif ($status === "update"): ?>
@@ -59,10 +66,10 @@ $status = $_GET["status"] ?? "";
                     <thead>
                         <tr>
                             <th class="col-no">No</th>
-                            <th>NIM</th>
-                            <th>Nama</th>
-                            <th>Program Studi</th>
-                            <th>Email</th>
+                            <th class="col-nim">NIM</th>
+                            <th class="col-nama">Nama Lengkap</th>
+                            <th class="col-prodi">Program Studi</th>
+                            <th class="col-email">Email</th>
                             <th class="col-action">Action</th>
                         </tr>
                     </thead>
@@ -70,18 +77,20 @@ $status = $_GET["status"] ?? "";
                         <?php if ($result && $result->num_rows > 0): ?>
                             <?php $no = 1; ?>
                             <?php while ($row = $result->fetch_assoc()): ?>
-                                <tr>
+                                <tr data-search="<?= htmlspecialchars(strtolower($row["nim"] . " " . $row["nama"] . " " . $row["program_studi"] . " " . $row["email"])); ?>">
                                     <td class="col-no"><?= $no++; ?></td>
-                                    <td><?= htmlspecialchars($row["nim"]); ?></td>
-                                    <td><?= htmlspecialchars($row["nama"]); ?></td>
-                                    <td><?= htmlspecialchars($row["program_studi"]); ?></td>
-                                    <td><?= htmlspecialchars($row["email"]); ?></td>
-                                    <td class="actions">
-                                        <a href="edit.php?id=<?= (int) $row["id"]; ?>">Edit</a>
-                                        <form action="../proses/proses_hapus.php" method="POST" class="delete-form">
-                                            <input type="hidden" name="id" value="<?= (int) $row["id"]; ?>">
-                                            <button type="submit" class="btn-delete">Hapus</button>
-                                        </form>
+                                    <td class="col-nim"><?= htmlspecialchars($row["nim"]); ?></td>
+                                    <td class="col-nama"><?= htmlspecialchars($row["nama"]); ?></td>
+                                    <td class="col-prodi"><?= htmlspecialchars($row["program_studi"]); ?></td>
+                                    <td class="col-email"><?= htmlspecialchars($row["email"]); ?></td>
+                                    <td class="actions col-action">
+                                        <div class="action-group">
+                                            <a href="edit.php?id=<?= (int) $row["id"]; ?>" class="btn-edit">Edit</a>
+                                            <form action="../proses/proses_hapus.php" method="POST" class="delete-form">
+                                                <input type="hidden" name="id" value="<?= (int) $row["id"]; ?>">
+                                                <button type="submit" class="btn-delete">Hapus</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>

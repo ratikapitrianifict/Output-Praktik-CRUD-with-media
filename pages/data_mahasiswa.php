@@ -39,7 +39,10 @@ $result = $conn->query($sql);
     <main>
         <section class="card">
             <div class="section-header">
-                <h2>Daftar Mahasiswa Terdaftar</h2>
+                <div>
+                    <h2>Daftar Mahasiswa Terdaftar</h2>
+                    <p class="text-muted" style="margin: 4px 0 0 0;">Data mahasiswa yang tersimpan pada tabel <code>mahasiswa</code> di database <code>web_programming_1</code>.</p>
+                </div>
                 <div class="link-group" style="margin-top: 0;">
                     <a href="form_mahasiswa.php" class="btn-action btn-primary">Tambah Mahasiswa Baru</a>
                     <a href="../crud/index.php" class="btn-action btn-secondary">Buka Modul CRUD</a>
@@ -54,14 +57,13 @@ $result = $conn->query($sql);
 
             <div class="table-scroll">
                 <table class="data-table">
-                    <caption>Data Mahasiswa pada Database web_programming_1</caption>
                     <thead>
                         <tr>
                             <th scope="col" class="col-no">No</th>
-                            <th scope="col">NIM</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">Program Studi</th>
-                            <th scope="col">Email</th>
+                            <th scope="col" class="col-nim">NIM</th>
+                            <th scope="col" class="col-nama">Nama Lengkap</th>
+                            <th scope="col" class="col-prodi">Program Studi</th>
+                            <th scope="col" class="col-email">Email</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,10 +72,10 @@ $result = $conn->query($sql);
                             <?php while ($row = $result->fetch_assoc()): ?>
                                 <tr>
                                     <td class="col-no"><?= $no++; ?></td>
-                                    <td><?= htmlspecialchars($row["nim"]); ?></td>
-                                    <td><?= htmlspecialchars($row["nama"]); ?></td>
-                                    <td><?= htmlspecialchars($row["program_studi"]); ?></td>
-                                    <td><?= htmlspecialchars($row["email"]); ?></td>
+                                    <td class="col-nim"><?= htmlspecialchars($row["nim"]); ?></td>
+                                    <td class="col-nama"><?= htmlspecialchars($row["nama"]); ?></td>
+                                    <td class="col-prodi"><?= htmlspecialchars($row["program_studi"]); ?></td>
+                                    <td class="col-email"><?= htmlspecialchars($row["email"]); ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>

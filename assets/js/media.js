@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let visibleCount = 0;
 
             mediaRows.forEach(function (row) {
-                const text = row.textContent.toLowerCase();
+                const text = (row.dataset.search || row.textContent).toLowerCase();
                 const isMatch = text.includes(keyword);
                 row.style.display = isMatch ? "" : "none";
                 if (isMatch) visibleCount++;
